@@ -1,5 +1,4 @@
-import { LogOut, User } from "lucide-react"
-import { Button } from "./ui/button"
+import { User } from "lucide-react"
 import { useAuth } from "./use-auth"
 
 export function UserMenu() {
@@ -7,13 +6,6 @@ export function UserMenu() {
 
   if (!user) return null
 
-  const handleLogout = async () => {
-    try {
-      await signOut()
-    } catch (error) {
-      console.error("Error signing out:", error)
-    }
-  }
 
   const getRoleDisplayName = (role: string) => {
     switch (role) {
