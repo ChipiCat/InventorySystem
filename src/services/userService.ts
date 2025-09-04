@@ -154,30 +154,23 @@ class UserService {
     // Restablecer contraseña
   async resetPassword(email: string): Promise<void> {
     try {
-      console.log("Intentando enviar correo de recuperación a:", email);
+      console.log("Enviando correo de recuperación a:", email);
       
-      // Configuración simplificada y confiable
+      // Configuración simple para que funcione con Firebase por defecto
       const actionCodeSettings = {
-        // URL donde el usuario será redirigido después de hacer clic en el enlace
-        url: `${window.location.origin}/reset-password`,
-        // Manejamos el código en nuestra app para mejor UX
-        handleCodeInApp: true,
+        url: `${window.location.origin}/login`,
+        handleCodeInApp: false, // Usar el sistema estándar de Firebase
       };
-      
-      console.log("Configuración del correo:", actionCodeSettings);
-      console.log("Auth domain:", auth.config.authDomain);
       
       await sendPasswordResetEmail(auth, email, actionCodeSettings);
       
-      console.log("✅ Correo de recuperación enviado exitosamente");
+      console.log("✅ Correo enviado exitosamente");
 
-      // Registrar el intento de reset
+      // Registrar el evento
       await this.logAuditEvent(null, "PASSWORD_RESET_REQUEST", {
         email,
         timestamp: new Date(),
         userAgent: navigator.userAgent,
-        authDomain: auth.config.authDomain,
-        redirectUrl: actionCodeSettings.url,
       });
     } catch (error: unknown) {
       // Registrar el fallo con más detalles

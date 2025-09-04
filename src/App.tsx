@@ -8,7 +8,6 @@ import LoginPage from "./features/Login";
 import ForgotPasswordPage from "./features/Login/pages/ForgotPasswordPage";
 import ResetPasswordPage from "./features/Login/pages/ResetPasswordPage";
 import DevelopmentHelper from "./components/DevelopmentHelper";
-import { FirebaseDebugger } from "./components/FirebaseDebugger";
 import { EmailTester } from "./components/EmailTester";
 import './App.css'
 
@@ -49,7 +48,6 @@ function App() {
               {/* Development Helper - solo en desarrollo */}
               {import.meta.env.DEV && <DevelopmentHelper />}
               {/* Firebase Debugger - para verificar configuración */}
-              {import.meta.env.DEV && <FirebaseDebugger />}
             </BrowserRouter>
           </div>
         </AuthProvider>
