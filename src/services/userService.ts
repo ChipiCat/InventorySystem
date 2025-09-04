@@ -151,9 +151,87 @@ class UserService {
     this.clearStoredSession();
   }
 
-  // Restablecer contraseña
+    // Restablecer contraseña
   async resetPassword(email: string): Promise<void> {
-    return sendPasswordResetEmail(auth, email);
+    try {
+      console.log("Intentando enviar correo de recuperación a:", email);
+      
+      // Configuración simplificada y confiable
+      const actionCodeSettings = {
+        // URL donde el usuario será redirigido después de hacer clic en el enlace
+        url: `${window.location.origin}/reset-password`,
+        // Manejamos el código en nuestra app para mejor UX
+        handleCodeInApp: true,
+      };
+      
+      console.log("Configuración del correo:", actionCodeSettings);
+      console.log("Auth domain:", auth.config.authDomain);
+      
+      await sendPasswordResetEmail(auth, email, actionCodeSettings);
+      
+      console.log("✅ Correo de recuperación enviado exitosamente");
+
+      // Registrar el intento de reset
+      await this.logAuditEvent(null, "PASSWORD_RESET_REQUEST", {
+        email,
+        timestamp: new Date(),
+        userAgent: navigator.userAgent,
+        authDomain: auth.config.authDomain,
+        redirectUrl: actionCodeSettings.url,
+      });
+    } catch (error: unknown) {
+      // Registrar el fallo con más detalles
+      const firebaseError = error as any;
+      const errorMessage = error instanceof Error ? error.message : "Unknown error";
+      const errorCode = firebaseError?.code || "unknown";
+      
+      console.error("❌ Error enviando correo de recuperación:");
+      console.error("Código de error:", errorCode);
+      console.error("Mensaje:", errorMessage);
+      console.error("Email:", email);
+      
+      await this.logAuditEvent(null, "PASSWORD_RESET_FAILED", {
+        email,
+        error: errorMessage,
+        errorCode,
+        timestamp: new Date(),
+      });
+      
+      // Proporcionar mensajes de error más específicos
+      if (errorCode === "auth/user-not-found") {
+        throw new Error("No existe una cuenta con este correo electrónico");
+      } else if (errorCode === "auth/invalid-email") {
+        throw new Error("El correo electrónico no es válido");
+      } else if (errorCode === "auth/too-many-requests") {
+        throw new Error("Demasiados intentos. Intenta de nuevo más tarde");
+      } else {
+        throw new Error(`Error al enviar correo: ${errorMessage}`);
+      }
+    }
+  }
+
+  // Función para invalidar todas las sesiones del usuario
+  async invalidateAllSessions(uid: string): Promise<void> {
+    try {
+      // Registrar la invalidación de sesiones
+      await this.logAuditEvent(uid, "ALL_SESSIONS_INVALIDATED", {
+        timestamp: new Date(),
+        reason: "PASSWORD_CHANGE",
+      });
+
+      // Actualizar el timestamp de invalidación de sesiones en Firestore
+      const userRef = doc(db, "users", uid);
+      await setDoc(
+        userRef,
+        { 
+          sessionInvalidatedAt: serverTimestamp(),
+          lastPasswordChange: serverTimestamp()
+        },
+        { merge: true }
+      );
+    } catch (error) {
+      console.error("Error invalidating sessions:", error);
+    }
   }
 
   // Crear usuario (solo para administradores)

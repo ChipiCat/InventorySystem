@@ -5,7 +5,11 @@ import { Provider } from "react-redux";
 import { store } from "./store";
 import HomePage from "./features/Home";
 import LoginPage from "./features/Login";
+import ForgotPasswordPage from "./features/Login/pages/ForgotPasswordPage";
+import ResetPasswordPage from "./features/Login/pages/ResetPasswordPage";
 import DevelopmentHelper from "./components/DevelopmentHelper";
+import { FirebaseDebugger } from "./components/FirebaseDebugger";
+import { EmailTester } from "./components/EmailTester";
 import './App.css'
 
 function App() {
@@ -17,6 +21,9 @@ function App() {
             <BrowserRouter>
               <Routes>
                 <Route path="/login" element={<LoginPage />} />
+                <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+                <Route path="/reset-password" element={<ResetPasswordPage />} />
+                <Route path="/test-email" element={<EmailTester />} />
                 <Route 
                   path="/" 
                   element={
@@ -41,6 +48,8 @@ function App() {
               
               {/* Development Helper - solo en desarrollo */}
               {import.meta.env.DEV && <DevelopmentHelper />}
+              {/* Firebase Debugger - para verificar configuración */}
+              {import.meta.env.DEV && <FirebaseDebugger />}
             </BrowserRouter>
           </div>
         </AuthProvider>

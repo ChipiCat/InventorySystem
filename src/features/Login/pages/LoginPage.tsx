@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, Link, useLocation } from "react-router-dom";
 import { Button } from "../../../shared/components/ui/button";
 import { useAuth } from "../../../shared/components/use-auth";
 import { 
@@ -9,11 +9,13 @@ import {
   Mail, 
   Lock, 
   AlertCircle,
+  CheckCircle,
   Loader2
 } from "lucide-react";
 
 const LoginPage = () => {
   const { user, signIn, loading } = useAuth();
+  const location = useLocation();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -21,13 +23,21 @@ const LoginPage = () => {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
 
   useEffect(() => {
     const savedColor = localStorage.getItem('primary-color');
     if (savedColor) {
       changePrimaryColor(savedColor);
     }
-  }, []);
+
+    // Mostrar mensaje de éxito si viene desde reset password
+    if (location.state?.message) {
+      setSuccessMessage(location.state.message);
+      // Limpiar el mensaje después de 5 segundos
+      setTimeout(() => setSuccessMessage(""), 5000);
+    }
+  }, [location]);
 
   const changePrimaryColor = (colorValue: string) => {
     const root = document.documentElement;
@@ -111,6 +121,14 @@ const LoginPage = () => {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Mensaje de éxito */}
+            {successMessage && (
+              <div className="flex items-center gap-2 p-3 bg-green-50 dark:bg-green-950/50 border border-green-200 dark:border-green-800 rounded-lg text-green-700 dark:text-green-300 text-sm">
+                <CheckCircle className="w-4 h-4 flex-shrink-0" />
+                <span>{successMessage}</span>
+              </div>
+            )}
+
             {/* Error general */}
             {errors.general && (
               <div className="flex items-center gap-2 p-3 bg-destructive/10 border border-destructive/20 rounded-lg text-destructive text-sm">
@@ -146,12 +164,12 @@ const LoginPage = () => {
                 <label className="text-sm font-medium text-foreground">
                   Contraseña
                 </label>
-                <button 
-                  type="button"
+                <Link 
+                  to="/forgot-password"
                   className="text-sm text-primary hover:underline"
                 >
                   ¿Olvidaste tu contraseña?
-                </button>
+                </Link>
               </div>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
