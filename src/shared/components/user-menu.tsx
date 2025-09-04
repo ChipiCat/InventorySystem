@@ -2,7 +2,7 @@ import { User } from "lucide-react"
 import { useAuth } from "./use-auth"
 
 export function UserMenu() {
-  const { user, userProfile, signOut } = useAuth()
+  const { user, userProfile } = useAuth()
 
   if (!user) return null
 
