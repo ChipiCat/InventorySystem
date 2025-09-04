@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useAuth } from "./auth-context";
+import { useAuth } from "./use-auth";
 import { ThemeToggle } from "./theme-toggle";
 import { 
   Book, 

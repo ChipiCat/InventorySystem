@@ -10,7 +10,7 @@ import {
   ChevronRight
 } from "lucide-react";
 import { useState } from "react";
-import { useAuth } from "./auth-context";
+import { useAuth } from "./use-auth";
 
 interface SidebarProps {
   className?: string;

@@ -1,0 +1,11 @@
+import { useContext } from "react";
+import { AuthContext } from "./auth-types";
+
+// Hook personalizado
+export function useAuth() {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
+}

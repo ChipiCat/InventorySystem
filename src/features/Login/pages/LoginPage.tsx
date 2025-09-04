@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Navigate } from "react-router-dom";
 import { Button } from "../../../shared/components/ui/button";
-import { useAuth } from "../../../shared/components/auth-context";
+import { useAuth } from "../../../shared/components/use-auth";
 import { 
   Book, 
   Eye, 
@@ -71,10 +71,11 @@ const LoginPage = () => {
 
     try {
       await signIn(formData.email, formData.password);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Login error:", error);
+      const errorMessage = error instanceof Error ? error.message : "Error al iniciar sesión. Verifica tus credenciales.";
       setErrors({
-        general: error.message || "Error al iniciar sesión. Verifica tus credenciales.",
+        general: errorMessage,
       });
     } finally {
       setIsSubmitting(false);

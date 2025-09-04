@@ -123,11 +123,12 @@ class UserService {
       });
 
       return profile;
-    } catch (error: any) {
+    } catch (error: unknown) {
       // Registrar intento fallido
+      const errorMessage = error instanceof Error ? error.message : "Unknown error";
       await this.logAuditEvent(null, "LOGIN_FAILED", {
         email,
-        error: error.message,
+        error: errorMessage,
         timestamp: new Date(),
       });
       throw error;
@@ -298,7 +299,7 @@ class UserService {
   private async logAuditEvent(
     userId: string | null,
     action: string,
-    details: any
+    details: Record<string, unknown>
   ): Promise<void> {
     try {
       await addDoc(collection(db, "audit_logs"), {

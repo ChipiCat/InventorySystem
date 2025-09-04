@@ -14,6 +14,7 @@ export { useTheme } from "./use-theme"
 export { ThemeToggle } from "./theme-toggle"
 
 // Auth Components
-export { AuthProvider, useAuth } from "./auth-context"
+export { AuthProvider } from "./auth-context"
+export { useAuth } from "./use-auth"
 export { ProtectedRoute } from "./protected-route"
 export { UserMenu } from "./user-menu"
