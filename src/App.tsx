@@ -1,30 +1,51 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AuthProvider, ProtectedRoute, Layout } from "./shared/components";
+import { ThemeProvider } from "./shared/components/theme-provider";
+import { Provider } from "react-redux";
+import { store } from "./store";
 import HomePage from "./features/Home";
 import LoginPage from "./features/Login";
-import { ThemeToggle } from "./shared/components";
+import DevelopmentHelper from "./components/DevelopmentHelper";
 import './App.css'
 
-function App()  {
+function App() {
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      {/* Header con toggle de tema */}
-      <header className="border-b p-4" style={{ borderColor: 'hsl(var(--border))' }}>
-        <div className="container mx-auto flex justify-between items-center">
-          <h1 className="text-xl font-bold">Inventory System</h1>
-          <ThemeToggle />
-        </div>
-      </header>
-
-      {/* Contenido principal */}
-      <main className="container mx-auto p-4">
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/login" element={<LoginPage />} />
-          </Routes>
-        </BrowserRouter>
-      </main>
-    </div>
+    <Provider store={store}>
+      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+        <AuthProvider>
+          <div className="min-h-screen bg-background text-foreground">
+            <BrowserRouter>
+              <Routes>
+                <Route path="/login" element={<LoginPage />} />
+                <Route 
+                  path="/" 
+                  element={
+                    <ProtectedRoute>
+                      <Layout>
+                        <HomePage />
+                      </Layout>
+                    </ProtectedRoute>
+                  } 
+                />
+                <Route 
+                  path="*" 
+                  element={
+                    <ProtectedRoute>
+                      <Layout>
+                        <HomePage />
+                      </Layout>
+                    </ProtectedRoute>
+                  } 
+                />
+              </Routes>
+              
+              {/* Development Helper - solo en desarrollo */}
+              {import.meta.env.DEV && <DevelopmentHelper />}
+            </BrowserRouter>
+          </div>
+        </AuthProvider>
+      </ThemeProvider>
+    </Provider>
   );
 }
 
