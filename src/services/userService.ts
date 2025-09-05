@@ -181,7 +181,7 @@ class UserService {
       });
     } catch (error: unknown) {
       // Registrar el fallo con más detalles
-      const firebaseError = error as any;
+      const firebaseError = error as unknown & { code?: string };
       const errorMessage = error instanceof Error ? error.message : "Unknown error";
       const errorCode = firebaseError?.code || "unknown";
       

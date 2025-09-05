@@ -13,10 +13,10 @@ const ForgotPasswordPage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     setError("");
     setMessage("");
-    
+
     if (!email) {
       setError("Por favor ingresa tu correo electrónico");
       return;
@@ -24,37 +24,38 @@ const ForgotPasswordPage = () => {
 
     setIsSubmitting(true);
 
-    try {
-      const auth = getAuth();
-      auth.languageCode = 'es';
-      
-      await sendPasswordResetEmail(auth, email, {
-        url: window.location.origin + '/login',
-        handleCodeInApp: false
+    const auth = getAuth();
+    sendPasswordResetEmail(auth, email)
+      .then(() => {
+        setEmailSent(true);
+        setMessage(`Correo enviado a ${email}`);
+      })
+      .catch((error: unknown) => {
+        console.error("Error:", error);
+
+        if (error instanceof Error && 'code' in error) {
+          const firebaseError = error as { code: string; message: string };
+          
+          switch (firebaseError.code) {
+            case "auth/user-not-found":
+              setError("No existe una cuenta con este correo");
+              break;
+            case "auth/invalid-email":
+              setError("Correo electrónico inválido");
+              break;
+            case "auth/too-many-requests":
+              setError("Demasiados intentos. Espera un momento");
+              break;
+            default:
+              setError("Error al enviar el correo");
+          }
+        } else {
+          setError("Error al enviar el correo");
+        }
+      })
+      .finally(() => {
+        setIsSubmitting(false);
       });
-      
-      setEmailSent(true);
-      setMessage(`Correo enviado a ${email}`);
-      
-    } catch (error: any) {
-      console.error('Error:', error);
-      
-      switch (error.code) {
-        case 'auth/user-not-found':
-          setError('No existe una cuenta con este correo');
-          break;
-        case 'auth/invalid-email':
-          setError('Correo electrónico inválido');
-          break;
-        case 'auth/too-many-requests':
-          setError('Demasiados intentos. Espera un momento');
-          break;
-        default:
-          setError('Error al enviar el correo');
-      }
-    } finally {
-      setIsSubmitting(false);
-    }
   };
 
   if (emailSent) {

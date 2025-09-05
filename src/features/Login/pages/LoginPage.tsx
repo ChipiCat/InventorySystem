@@ -31,10 +31,8 @@ const LoginPage = () => {
       changePrimaryColor(savedColor);
     }
 
-    // Mostrar mensaje de éxito si viene desde reset password
     if (location.state?.message) {
       setSuccessMessage(location.state.message);
-      // Limpiar el mensaje después de 5 segundos
       setTimeout(() => setSuccessMessage(""), 5000);
     }
   }, [location]);
