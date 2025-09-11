@@ -39,9 +39,9 @@ const LoginPage = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-muted/50 to-background p-4">
-      <div className="w-full max-w-md">
-        <div className="bg-card rounded-2xl shadow-2xl border border-border p-8">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-muted/50 to-background px-4 py-6 sm:px-6 lg:px-8">
+      <div className="w-full max-w-sm sm:max-w-md">
+        <div className="bg-card rounded-xl sm:rounded-2xl shadow-xl sm:shadow-2xl border border-border p-6 sm:p-8">
           <LoginHeader />
           <LoginForm 
             onSubmit={handleSubmit}

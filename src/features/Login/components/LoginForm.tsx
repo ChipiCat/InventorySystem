@@ -44,15 +44,16 @@ export const LoginForm = ({ onSubmit, isSubmitting, generalError }: LoginFormPro
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
       {generalError && (
-        <div className="flex items-center gap-2 p-3 bg-destructive/10 border border-destructive/20 rounded-lg text-destructive text-sm">
-          <AlertCircle className="w-4 h-4 flex-shrink-0" />
-          <span>{generalError}</span>
+        <div className="flex items-start gap-2 p-3 bg-destructive/10 border border-destructive/20 rounded-lg text-destructive text-sm">
+          <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
+          <span className="leading-relaxed">{generalError}</span>
         </div>
       )}
+      
       <div className="space-y-2">
-        <label className="text-sm font-medium text-foreground">
+        <label className="text-sm font-medium text-foreground block">
           Usuario
         </label>
         <div className="relative">
@@ -61,25 +62,29 @@ export const LoginForm = ({ onSubmit, isSubmitting, generalError }: LoginFormPro
             type="email"
             value={values.email}
             onChange={(e) => updateField("email", e.target.value)}
-            className={`w-full pl-10 pr-4 py-3 bg-background border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-colors ${
+            className={`w-full pl-10 pr-4 py-3 sm:py-3.5 bg-background border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-colors text-base ${
               errors.email ? "border-destructive" : "border-border"
             }`}
-            placeholder="Ingresa tu usuario"
+            placeholder="ejemplo@correo.com"
             disabled={isSubmitting}
+            autoComplete="email"
+            autoCapitalize="none"
+            autoCorrect="off"
           />
         </div>
         {errors.email && (
-          <p className="text-destructive text-sm">{errors.email}</p>
+          <p className="text-destructive text-sm leading-relaxed">{errors.email}</p>
         )}
       </div>
+
       <div className="space-y-2">
-        <div className="flex justify-between">
-          <label className="text-sm font-medium text-foreground">
+        <div className="flex justify-between items-center">
+          <label className="text-sm font-medium text-foreground block">
             Contraseña
           </label>
           <Link 
             to="/forgot-password"
-            className="text-sm text-primary hover:underline"
+            className="text-sm text-primary hover:underline focus:outline-none focus:underline"
           >
             ¿Olvidaste tu contraseña?
           </Link>
@@ -90,29 +95,31 @@ export const LoginForm = ({ onSubmit, isSubmitting, generalError }: LoginFormPro
             type={showPassword ? "text" : "password"}
             value={values.password}
             onChange={(e) => updateField("password", e.target.value)}
-            className={`w-full pl-10 pr-12 py-3 bg-background border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-colors ${
+            className={`w-full pl-10 pr-12 py-3 sm:py-3.5 bg-background border rounded-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-colors text-base ${
               errors.password ? "border-destructive" : "border-border"
             }`}
-            placeholder="Ingresa tu contraseña"
+            placeholder="••••••••"
             disabled={isSubmitting}
+            autoComplete="current-password"
           />
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground"
+            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground focus:outline-none focus:text-foreground transition-colors p-1"
             disabled={isSubmitting}
+            aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
           >
             {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
           </button>
         </div>
         {errors.password && (
-          <p className="text-destructive text-sm">{errors.password}</p>
+          <p className="text-destructive text-sm leading-relaxed">{errors.password}</p>
         )}
       </div>
 
       <Button
         type="submit"
-        className="w-full py-3 font-medium text-white font-bold"
+        className="w-full py-3 sm:py-3.5 font-medium text-white font-bold text-base"
         disabled={isSubmitting}
       >
         {isSubmitting ? (
