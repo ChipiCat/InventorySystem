@@ -1,47 +1,53 @@
-import { Button } from "../../../shared/components";
+import { useState } from "react";
+import { Navigate } from "react-router-dom";
+import { useAuth } from "../../../shared/hooks/useAuth";
+import { LoginHeader } from "../components/LoginHeader";
+import { LoginForm } from "../components/LoginForm";
 
 const LoginPage = () => {
+  const { user, signIn, loading } = useAuth();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [generalError, setGeneralError] = useState("");
+
+  const handleSubmit = async (email: string, password: string) => {
+    setIsSubmitting(true);
+    setGeneralError("");
+
+    try {
+      await signIn(email, password);
+    } catch (error: unknown) {
+      console.error("Login error:", error);
+      const errorMessage = error instanceof Error 
+        ? error.message 
+        : "Error al iniciar sesión. Verifica tus credenciales.";
+      setGeneralError(errorMessage);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  if (user) {
+    return <Navigate to="/" replace />;
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
   return (
-    <div className="flex items-center justify-center min-h-[calc(100vh-8rem)]">
-      <div className="mx-auto max-w-sm space-y-6">
-        <div className="space-y-2 text-center">
-          <h1 className="text-3xl font-bold">Iniciar Sesión</h1>
-          <p className="text-gray-600 dark:text-gray-400">
-            Ingresa tus credenciales para acceder al sistema
-          </p>
-        </div>
-        
-        <div className="space-y-4">
-          <div className="space-y-2">
-            <label htmlFor="email" className="text-sm font-medium leading-none">
-              Email
-            </label>
-            <input
-              id="email"
-              type="email"
-              placeholder="tu@email.com"
-              className="flex h-10 w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-3 py-2 text-sm placeholder:text-gray-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-            />
-          </div>
-          
-          <div className="space-y-2">
-            <label htmlFor="password" className="text-sm font-medium leading-none">
-              Contraseña
-            </label>
-            <input
-              id="password"
-              type="password"
-              className="flex h-10 w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-3 py-2 text-sm placeholder:text-gray-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-            />
-          </div>
-          
-          <Button className="w-full">
-            Iniciar Sesión
-          </Button>
-          
-          <Button variant="outline" className="w-full">
-            Crear Cuenta
-          </Button>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-muted/50 to-background px-4 py-6 sm:px-6 lg:px-8">
+      <div className="w-full max-w-sm sm:max-w-md">
+        <div className="bg-card rounded-xl sm:rounded-2xl shadow-xl sm:shadow-2xl border border-border p-6 sm:p-8">
+          <LoginHeader />
+          <LoginForm 
+            onSubmit={handleSubmit}
+            isSubmitting={isSubmitting}
+            generalError={generalError}
+          />
         </div>
       </div>
     </div>

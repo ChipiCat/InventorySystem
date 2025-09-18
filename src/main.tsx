@@ -6,8 +6,8 @@ import { ThemeProvider } from "./shared/components";
 import "./index.css";
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-   <Provider store={store}>
-    <ThemeProvider defaultTheme="system" storageKey="inventory-ui-theme">
+  <Provider store={store}>
+    <ThemeProvider defaultTheme="light" storageKey="inventory-ui-theme">
       <App />
     </ThemeProvider>
   </Provider>
