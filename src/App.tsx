@@ -1,19 +1,19 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { AuthProvider, ProtectedRoute, Layout } from "./shared/components";
-import { ThemeProvider } from "./shared/components/theme-provider";
-import { Provider } from "react-redux";
-import { store } from "./store";
-import HomePage from "./features/Home";
-import LoginPage from "./features/Login";
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import { store } from './store';
+import { ThemeProvider } from './shared/components/theme-provider';
+import { AuthInitializer } from './shared/components/AuthInitializer';
+import { ProtectedRoute } from './shared/components/protected-route';
+import { Layout } from './shared/components/layout';
+import LoginPage from './features/Login/pages/LoginPage';
+import HomePage from './features/Home/pages/HomePage';
 import ForgotPasswordPage from "./features/Login/pages/ForgotPasswordPage";
-import DevelopmentHelper from "./components/DevelopmentHelper";
-import './App.css'
 
 function App() {
   return (
     <Provider store={store}>
-      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-        <AuthProvider>
+      <AuthInitializer>
+        <ThemeProvider defaultTheme="system" storageKey="inventory-ui-theme">
           <div className="min-h-screen bg-background text-foreground">
             <BrowserRouter>
               <Routes>
@@ -40,11 +40,10 @@ function App() {
                   } 
                 />
               </Routes>
-              {import.meta.env.DEV && <DevelopmentHelper />}
             </BrowserRouter>
           </div>
-        </AuthProvider>
-      </ThemeProvider>
+        </ThemeProvider>
+      </AuthInitializer>
     </Provider>
   );
 }

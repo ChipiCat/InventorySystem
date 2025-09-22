@@ -1,8 +1,8 @@
 import { User } from "lucide-react"
-import { useAuth } from "./use-auth"
+import { useAuth } from "../hooks/useAuth"
 
 export function UserMenu() {
-  const { user, userProfile } = useAuth()
+  const { user } = useAuth()
 
   if (!user) return null
 
@@ -23,9 +23,9 @@ export function UserMenu() {
       <div className="flex items-center gap-2 text-sm">
         <User className="h-4 w-4" />
         <div className="flex flex-col">
-          <span className="font-medium">{userProfile?.name || user.displayName || user.email}</span>
+          <span className="font-medium">{user?.name || user?.email}</span>
           <span className="text-xs text-gray-500 dark:text-gray-400">
-            {userProfile?.role ? getRoleDisplayName(userProfile.role) : 'Usuario'}
+            {user?.role ? getRoleDisplayName(user.role) : 'Usuario'}
           </span>
         </div>
       </div>
