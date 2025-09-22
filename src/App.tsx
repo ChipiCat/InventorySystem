@@ -7,6 +7,7 @@ import { ProtectedRoute } from './shared/components/protected-route';
 import { Layout } from './shared/components/layout';
 import LoginPage from './features/Login/pages/LoginPage';
 import HomePage from './features/Home/pages/HomePage';
+import ForgotPasswordPage from "./features/Login/pages/ForgotPasswordPage";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
             <BrowserRouter>
               <Routes>
                 <Route path="/login" element={<LoginPage />} />
+                <Route path="/forgot-password" element={<ForgotPasswordPage />} />
                 <Route 
                   path="/" 
                   element={
